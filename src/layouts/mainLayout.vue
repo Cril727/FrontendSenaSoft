@@ -31,7 +31,6 @@
 
     <q-page-container style="max-width: 100% !important;">
       <router-view />
-
     </q-page-container>
   </q-layout>
 </template>
