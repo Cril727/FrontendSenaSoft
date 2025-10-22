@@ -41,7 +41,7 @@ const handleSave = async (payload) => {
       return
     }
 
-    const res = await putData(`/updateUser/${userId}`, payload)
+    const res = await putData(`/updatePassenger/${userId}`, payload)
 
     if (res && res.success) {
       notify.success(res.msg || 'Datos personales actualizados')
