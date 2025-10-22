@@ -45,9 +45,15 @@ const applyFilter = () => {
 const getVuelos = async () => {
   try {
     const res = await getData("/flights")
-    console.log(res.data)
+    console.log(res)
   } catch (error) {
-    console.log(error);
+    if (error?.response?.status === 401) {
+      console.error("Sesión expirada - redireccionando al login");
+      // authStore.clearAuth(); // Opcional: limpiar auth
+      // router.push('/'); // Opcional: redirigir al login
+    } else {
+      console.error("Error al obtener vuelos:", error);
+    }
   }
 }
 
