@@ -8,14 +8,14 @@ import misReservas from "../views/misReservas.vue";
 import crearCuenta from "../views/crearCuenta.vue";
 
 const routes = [
-  { path: "/", component: login },
+  { path: "/", component: login},
+  { path: "/crearCuenta", component: crearCuenta },
   {
     path: "/app", component: mainLayout, children: [
       { path: "dashboard", component: dashboard },
       { path: "datosPersonales", component: datosPersonales },
       { path: "pagar", component: pagar },
-      { path: "misReservas", component: misReservas },
-      { path: "crearCuenta", component: crearCuenta },
+      { path: "misReservas", component: misReservas }
     ]
   }
 ];

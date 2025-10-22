@@ -1,4 +1,16 @@
 <template>
+  <q-layout view="hHh lpR fFf">
+    <q-header elevated class="text-white" style="background-color: #d32f2f; height: 90px;">
+      <div
+        style="position: relative; height: 90px; width: 100%; display: flex; align-items: center; justify-content: center;">
+        <q-avatar size="90px"
+          style="position: absolute; left: 0; top: 0; bottom: 0; margin: auto 0 auto 16px; z-index: 5; background: #e53935; display: flex; align-items: center; justify-content: center;">
+          <img src="/src/assets/condorblanco.png" style="height: 90px; width: auto; background-color: #d32f2f;" />
+        </q-avatar>
+        <span style="font-size: 3rem; font-weight: bold; line-height: 80px;">CONDORTRAVELS</span>
+      </div>
+    </q-header>
+
     <q-page-container class="page-container">
       <div class="flex flex-center content-top" style="padding-top: 0px; padding-bottom: 30px;">
         <q-card class="q-pa-md login-card">
@@ -37,6 +49,7 @@
         </q-card>
       </div>
     </q-page-container>
+  </q-layout>
 </template>
 
 <script setup>
