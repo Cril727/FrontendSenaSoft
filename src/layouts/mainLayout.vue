@@ -17,7 +17,7 @@
     <transition name="fade">
       <div v-if="showMorph" class="morph-float-card">
         <q-card class="bg-primary text-white"
-          style="width: 320px; border-radius: 1.5em; background-color: #e53935 !important;">
+          style="width: 320px; border-radius: 1.5em; background-color: #dddddd !important;">
           <q-card-section class="text-h6">
             ¡Hello <strong>{{ full_name || 'Username' }}</strong>, welcome!
           </q-card-section>
@@ -223,5 +223,7 @@ const logout = () => {
   justify-content: flex-end;
   width: 100%;
   margin-top: 8px;
+  font-size: 10px;
+
 }
 </style>
