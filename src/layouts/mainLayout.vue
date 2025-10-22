@@ -53,8 +53,8 @@ const authStore = useAuthStore()
 onMounted(() => {
   const Auth = JSON.parse(localStorage.getItem("auth"))
   if (Auth.user) {
-    if(Auth.user.nombres){
-      full_name.value = Auth.user.nombres
+    if(Auth.user.full_name){
+      full_name.value = Auth.user.full_name
     }else{
       const Names = Auth.user.name.split(" ")
       full_name.value = Names[0]
