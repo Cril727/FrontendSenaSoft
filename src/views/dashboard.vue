@@ -225,9 +225,17 @@ const formatPrice = (price) => {
 
 // Reservar vuelo
 const reserveFlight = (flight) => {
-  // Aquí puedes implementar la lógica de reserva
-  notify.info('Funcionalidad de reserva en desarrollo')
-  console.log('Reservar vuelo:', flight)
+  // Redirigir a la página de selección de asientos
+  router.push({
+    name: 'selectSeats',
+    params: { flightId: flight.id },
+    query: {
+      origin: flight.origin?.city,
+      destination: flight.destination?.city,
+      price: flight.price,
+      departure: flight.departure_at
+    }
+  })
 }
 
 onMounted(() => {
