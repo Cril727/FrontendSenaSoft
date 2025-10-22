@@ -12,7 +12,7 @@
     </q-header>
 
     <q-page-container class="page-container">
-      <div class="flex flex-center content-top" style="padding-top: 0px; padding-bottom: 30px;">
+      <div class="flex flex-center content-top" style="padding-top: 40px; padding-bottom: 30px;">
         <q-card class="q-pa-md login-card">
           <h1 style="font-size: 40px;">Create Account</h1>
           <q-form @submit="onSubmit" class="form-container">

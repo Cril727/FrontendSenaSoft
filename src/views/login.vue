@@ -39,7 +39,7 @@
             <!-- Botón de ingreso -->
             <div class="row justify-center" style="width: 100%; padding-top: 32px;">
               <Button1 type="submit" :loading="loading" customClass="wide-btn" label="login" style="margin: 2%;" />
-              <Button1 to="/app/crearCuenta" :loading="loading" customClass="wide-btn" label="create account" style="margin: 2%;" />
+              <Button1 to="/crearCuenta" :loading="loading" customClass="wide-btn" label="create account" style="margin: 2%;" />
             </div>
           </q-form>
         </q-card>

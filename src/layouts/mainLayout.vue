@@ -8,7 +8,7 @@
         <span class="header-title">CONDORTRAVELS</span>
         <div class="header-action-btn">
           <q-btn fab color="white" size="lg" @click="showMorph = !showMorph" unelevated>
-            <span style="font-weight:bold; color:#39a900;">yo</span>
+            <span style="font-weight:bold; color:#d32f2f;">yo</span>
           </q-btn>
         </div>
       </div>
@@ -17,12 +17,13 @@
     <transition name="fade">
       <div v-if="showMorph" class="morph-float-card">
         <q-card class="bg-primary text-white"
-          style="width: 320px; border-radius: 1.5em; background-color: #5ccb5f !important;">
+          style="width: 320px; border-radius: 1.5em; background-color: #e53935 !important;">
           <q-card-section class="text-h6">
             ¡Hello <strong>{{ full_name || 'full_name' }}</strong>, welcome!
           </q-card-section>
           <q-card-actions align="right">
-            Do you want to log out?
+            <Button1 label="Consult reservation" to="/app/misReservas"/>
+            <Button1 label="Personal information" to="/app/datosPersonales"/>
             <q-btn flat round dense icon="logout" class="logout-btn" @click="logout" :aria-label="'Cerrar sesión'" />
           </q-card-actions>
         </q-card>
@@ -36,6 +37,7 @@
 </template>
 
 <script setup>
+import Button1 from '../components/button-1.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
@@ -95,7 +97,7 @@ const logout = () => {
 }
 
 .custom-header {
-  background-color: #39a900;
+  background-color: #d32f2f;
   height: 90px;
   position: relative;
 }
