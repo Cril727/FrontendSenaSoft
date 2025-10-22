@@ -3,7 +3,7 @@
     <div class="hero">
       <h1 class="hero-title">TO LOVE IS TO FLY</h1>
       <div class="promo">
-        <img src="../assets/promo-banner.png" alt="promo" class="promo-img" />
+        <img src="../assets/promotion.png" alt="promo" class="promo-img" />
       </div>
     </div>
 
