@@ -22,8 +22,8 @@
             ¡Hello <strong>{{ full_name || 'full_name' }}</strong>, welcome!
           </q-card-section>
           <q-card-actions align="right">
-            <Button1 label="Consult reservation" to="/app/misReservas"/>
-            <Button1 label="Personal information" to="/app/datosPersonales"/>
+            <Button1 label="Consult reservation" to="/app/misReservas" style="font-size: 20px;"/>
+            <Button1 label="Personal information" to="/app/datosPersonales" style="font-size: 20px;"/>
             <q-btn flat round dense icon="logout" class="logout-btn" @click="logout" :aria-label="'Cerrar sesión'" />
           </q-card-actions>
         </q-card>
