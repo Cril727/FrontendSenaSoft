@@ -19,12 +19,14 @@
         <q-card class="bg-primary text-white"
           style="width: 320px; border-radius: 1.5em; background-color: #e53935 !important;">
           <q-card-section class="text-h6">
-            ¡Hello <strong>{{ full_name || 'full_name' }}</strong>, welcome!
+            ¡Hello <strong>{{ full_name || 'Username' }}</strong>, welcome!
           </q-card-section>
           <q-card-actions align="right">
-            <Button1 label="Consult reservation" to="/app/misReservas" style="font-size: 20px;"/>
-            <Button1 label="Personal information" to="/app/datosPersonales" style="font-size: 20px;"/>
-            <q-btn flat round dense icon="logout" class="logout-btn" @click="logout" :aria-label="'Cerrar sesión'" />
+            <div class="button-row">
+              <Button1 label="Consult reservation" to="/app/misReservas" />
+              <Button1 label="Personal information" to="/app/datosPersonales" />
+              <q-btn flat round dense icon="logout" class="logout-btn" @click="logout" :aria-label="'Log out'" />
+            </div>
           </q-card-actions>
         </q-card>
       </div>
@@ -212,5 +214,14 @@ const logout = () => {
 
 .q-footer {
   z-index: 1000;
+}
+
+.button-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 8px;
 }
 </style>
