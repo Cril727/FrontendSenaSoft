@@ -8,7 +8,7 @@
         <span class="header-title">CONDORTRAVELS</span>
         <div class="header-action-btn">
           <q-btn fab color="white" size="lg" @click="showMorph = !showMorph" unelevated>
-            <span style="font-weight:bold; color:#d32f2f;">yo</span>
+            <span style="font-weight:bold; color:#d32f2f;">me</span>
           </q-btn>
         </div>
       </div>
@@ -17,15 +17,15 @@
     <transition name="fade">
       <div v-if="showMorph" class="morph-float-card">
         <q-card class="bg-primary text-white"
-          style="width: 320px; border-radius: 1.5em; background-color: #dddddd !important;">
-          <q-card-section class="text-h6">
+          style="width: 400px; border-radius: 1.5em; background-color: #dddddd !important;">
+          <q-card-section class="text-h6" style="color: black;">
             ¡Hello <strong>{{ full_name || 'Username' }}</strong>, welcome!
           </q-card-section>
           <q-card-actions align="right">
             <div class="button-row">
-              <Button1 label="Consult reservation" to="/app/misReservas" />
-              <Button1 label="Personal information" to="/app/datosPersonales" />
-              <q-btn flat round dense icon="logout" class="logout-btn" @click="logout" :aria-label="'Log out'" />
+              <Button1 label="Consult reservation" to="/app/misReservas" style="font-size: 10px;"/>
+              <Button1 label="Personal information" to="/app/datosPersonales" style="font-size: 10px;"/>
+              <q-btn flat round dense icon="logout" class="logout-btn" @click="logout" :aria-label="'Log out'" style="background-color: #dd0000;"/>
             </div>
           </q-card-actions>
         </q-card>
