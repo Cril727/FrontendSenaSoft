@@ -19,12 +19,19 @@ export const useAuthStore = defineStore("auth", () => {
     function setAuth(tokenValue, userData) {
         setToken(tokenValue)
         setUser(userData)
+        // Guardar en localStorage para que el interceptor lo use
+        localStorage.setItem('auth', JSON.stringify({ 
+            token: tokenValue, 
+            user: userData 
+        }));
     }
 
     function clearAuth() {
         token.value = ""
         user.value = null
         isAuthenticated.value = false
+        // Eliminar de localStorage
+        localStorage.removeItem('auth');
     }
 
     return {
