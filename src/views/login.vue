@@ -63,16 +63,16 @@ const notify = useNotifications()
 const authStore = useAuthStore()
 
 const form = ref({
-  email: '',
-  password: ''
+  correo: '',
+  contrasena: ''
 })
 
 const onSubmit = async () => {
   loading.value = true
   try {
     const response = await postData('/login', {
-      email: form.value.email,
-      password: form.value.password
+      correo: form.value.correo,
+      contrasena: form.value.contrasena
     })
 
     if (response && response.token) {
