@@ -18,7 +18,7 @@
           <h1 style="font-size: 40px;">Login CondorTravels</h1>
           <q-form @submit="onSubmit" class="form-container">
             <!-- Input de correo -->
-            <q-input filled v-model="form.correo" label="EMAIL" type="text" class="rounded-select"
+            <q-input filled v-model="form.email" label="EMAIL" type="text" class="rounded-select"
               :rules="[val => !!val || 'El correo es requerido', val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'invalid email format, example@gmail.com']">
               <template v-slot:prepend>
                 <span class="material-symbols-outlined" style="font-size: 24px; color:#888">mail</span>
@@ -26,7 +26,7 @@
             </q-input>
 
             <!-- Campo de contraseña común para todos -->
-            <q-input filled v-model="form.contrasena" label="PASSWORD" :type="showPassword ? 'text' : 'password'"
+            <q-input filled v-model="form.password" label="PASSWORD" :type="showPassword ? 'text' : 'password'"
               class="rounded-select" :rules="[val => !!val || 'The password is  required']">
               <template v-slot:prepend>
                 <span class="material-symbols-outlined" style="font-size: 24px; color:#888">lock</span>
@@ -63,16 +63,16 @@ const notify = useNotifications()
 const authStore = useAuthStore()
 
 const form = ref({
-  correo: '',
-  contrasena: ''
+  email: '',
+  password: ''
 })
 
 const onSubmit = async () => {
   loading.value = true
   try {
     const response = await postData('/login', {
-      correo: form.value.correo,
-      contrasena: form.value.contrasena
+      email: form.value.email,
+      password: form.value.password
     })
 
     if (response && response.token) {
