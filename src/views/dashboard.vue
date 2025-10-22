@@ -1,31 +1,29 @@
 <template>
-  <q-page-container class="page-bg">
+  <q-page-container class="page-bg" style="padding: 4%;">
     <div class="hero">
-      <h1 class="hero-title">TO LOVE IS TO FLY</h1>
       <div class="promo">
-        <img src="../assets/promotion.png" alt="promo" class="promo-img" />
+        <img src="../assets/promotion.png" alt="promo" class="promo-img" style="width: 2000px; height: 100%;"/>
       </div>
     </div>
 
-    <div class="search-card">
+    <div class="search-card" >
       <div class="search-title">SEARCH AND FIND YOUR FLIGHT</div>
       <div class="search-row">
         <q-select filled dense v-model="form.origin" :options="cities" label="CITY OF ORIGIN" class="select" />
         <q-select filled dense v-model="form.destination" :options="cities" label="DESTINATION CITY" class="select" />
         <q-select filled dense v-model="form.passengers" :options="passengerOptions" label="NUMBER OF PASSENGERS" class="small-select" />
-        <q-btn unelevated color="red" class="search-btn" @click="onSearch">Search</q-btn>
+        <q-btn unelevated color="red" class="search-btn" @click="applyFilter">Search</q-btn>
       </div>
     </div>
-
-    <!-- optional content area -->
     <div class="page-content">
-      <!-- dashboard content goes here -->
+
     </div>
   </q-page-container>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { getData } from '../services/apiClient.js';
+import { ref, onMounted } from 'vue';
 
 const cities = [
   'MEDELLIN','CARTAGENA','SANTA MARTA','BOGOTA','POPAYAN',
@@ -40,10 +38,25 @@ const form = ref({
   passengers: 1
 })
 
-const onSearch = () => {
-  // placeholder: actual request will be added later
+const applyFilter = () => {
   console.log('search', form.value)
 }
+
+const getVuelos = async () => {
+  try {
+    const res = await getData("/flights")
+    console.log(res.data)
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
+onMounted(() => {
+  getVuelos()
+})
+
 </script>
 
 <style scoped>

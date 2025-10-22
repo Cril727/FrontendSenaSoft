@@ -78,7 +78,7 @@ const onSubmit = async () => {
     if (response && response.token) {
       authStore.setAuth(response.token, response.user)
       router.push('/app/dashboard')
-      notify.success(response.msg)
+      notify.success(response.msg || 'WELCOME')
     } else {
       notify.error('Respuesta del servidor inválida')
     }

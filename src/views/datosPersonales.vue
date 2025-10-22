@@ -1,33 +1,21 @@
 <template>
   <div class="q-pa-md">
-    <q-btn label="Edit personal data" color="primary" @click="show = true" />
-    <modalBase v-model:modelValue="show">
-      <template #title>
+      <template >
         ACCOUNT SETUP REQUIRED
       </template>
-
-      <template #contenido>
         <datosForm
           :initial="user"
           title="Please complete this information, which will help make your experience with CONDORTRAVELS more enjoyable."
           @save="handleSave"
           @cancel="closeModal"
         />
-      </template>
-
-      <!-- remove default actions so the form controls the buttons -->
-      <template #actions></template>
-    </modalBase>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import modalBase from '../components/modalBase.vue'
 import datosForm from '../components/datosForm.vue'
 import { useNotifications } from '../composables/useNotifications.js'
-// replace putData usage with a fetch that sends the auth token
-
 import { useAuthStore } from '../store/authStore.js'
 
 const notify = useNotifications()
@@ -44,10 +32,8 @@ try {
 
 const handleSave = async (payload) => {
   try {
-    // get token from pinia store or localStorage
     const token = authStore?.token || JSON.parse(localStorage.getItem('auth') || '{}').token
-
-    const res = await fetch(`/updatePassenger/${user.value.id}`, {
+    const res = await fetch(`/updatePassenger/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -60,7 +46,6 @@ const handleSave = async (payload) => {
 
     if (res.status === 401) {
       notify.error('Session expired or unauthorized. Please log in again.')
-      // optional: clear auth and redirect to login
       authStore.clearAuth && authStore.clearAuth()
       show.value = false
       return

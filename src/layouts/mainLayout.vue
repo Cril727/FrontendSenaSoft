@@ -24,17 +24,17 @@
                     </q-card-section>
                     <q-card-actions align="right">
                         <div class="button-row">
-                            <Button1 label="Consult reservation" to="/app/misReservas" />
-                            <Button1 label="Personal information" to="/app/datosPersonales" />
+                            <Button1 label="Consult reservation" to="/app/misReservas" style="font-size: 10px;"/>
+                            <Button1 label="Personal information" to="/app/datosPersonales" style="font-size: 10px;"/>
                             <q-btn flat round dense icon="logout" class="logout-btn" @click="logout"
-                                :aria-label="'Log out'" />
+                                :aria-label="'Log out'" style="background-color: #dd0000;"/>
                         </div>
                     </q-card-actions>
-                </q-card>
+                </q-card>   
             </div>
         </transition>
 
-        <q-page-container style="max-width: 100% !important;">
+        <q-page-container style="max-width: 100% !important; padding-top: 0%;">
             <router-view />
         </q-page-container>
     </q-layout>
