@@ -2,13 +2,14 @@
   <q-layout view="hHh lpR fFf">
     <q-header elevated class="text-white custom-header">
       <div class="header-container">
-        <q-avatar size="90px" class="header-avatar">
-          <img src="/src/assets/condorblanco.png" alt="logo" />
-        </q-avatar>
+        <!-- Use a plain container for the logo so it doesn't get cropped into a circle -->
+        <div class="header-logo">
+          <img src="/src/assets/condorblanco.png" alt="logo" style="height: 50px;"/>
+        </div>
         <span class="header-title">CONDORTRAVELS</span>
         <div class="header-action-btn">
           <q-btn fab color="white" size="lg" @click="showMorph = !showMorph" unelevated>
-            <span style="font-weight:bold; color:#d32f2f;">yo</span>
+            <span style="font-weight:bold; color:#d32f2f;">me</span>
           </q-btn>
         </div>
       </div>
@@ -17,15 +18,15 @@
     <transition name="fade">
       <div v-if="showMorph" class="morph-float-card">
         <q-card class="bg-primary text-white"
-          style="width: 320px; border-radius: 1.5em; background-color: #dddddd !important;">
-          <q-card-section class="text-h6">
+          style="width: 400px; border-radius: 1.5em; background-color: #dddddd !important;">
+          <q-card-section class="text-h6" style="color: black;">
             ¡Hello <strong>{{ full_name || 'Username' }}</strong>, welcome!
           </q-card-section>
           <q-card-actions align="right">
             <div class="button-row">
-              <Button1 label="Consult reservation" to="/app/misReservas" />
-              <Button1 label="Personal information" to="/app/datosPersonales" />
-              <q-btn flat round dense icon="logout" class="logout-btn" @click="logout" :aria-label="'Log out'" />
+              <Button1 label="Consult reservation" to="/app/misReservas" style="font-size: 10px;" />
+              <Button1 label="Personal information" to="/app/datosPersonales" style="font-size: 10px;"/>
+              <q-btn flat round dense icon="logout" class="logout-btn" @click="logout" :aria-label="'Log out'" style="background-color: #dd0000;" />
             </div>
           </q-card-actions>
         </q-card>
@@ -114,14 +115,23 @@ const logout = () => {
   padding: 0 32px;
 }
 
-.header-avatar {
-  position: static;
+.header-logo {
+  display: flex;
+  align-items: center;
   margin-right: 16px;
+  /* keep layout space similar to previous avatar */
 }
 
-.header-avatar img {
+.header-logo img {
+  height: 90px;      /* match header height so it fits nicely */
   width: auto;
+  object-fit: contain; /* preserve whole image, no cropping */
+  border-radius: 0;    /* ensure not rounded */
+  display: block;
 }
+
+/* keep the old header-avatar rule if present but don't let it force cropping */
+.header-avatar { display: none; }
 
 .header-title {
   font-size: 3rem;

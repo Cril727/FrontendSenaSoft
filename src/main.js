@@ -18,6 +18,7 @@ import {
   QInput,
   QIcon,
   QBtn,
+  QDialog,
   QSpinnerIos,
 } from 'quasar'
 import { createPinia } from 'pinia'
@@ -53,6 +54,7 @@ myApp.use(Quasar, {
     QInput,
     QIcon,
     QBtn,
+    QDialog,
     QSpinnerIos,
   },
   plugins: { Notify },
