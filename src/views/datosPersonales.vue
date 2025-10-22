@@ -32,35 +32,33 @@ try {
 
 const handleSave = async (payload) => {
   try {
-    const token = authStore?.token || JSON.parse(localStorage.getItem('auth') || '{}').token
-    const res = await fetch(`/updatePassenger/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-      },
-      body: JSON.stringify(payload)
-    })
-
-    const data = await res.json().catch(() => ({}))
-
-    if (res.status === 401) {
-      notify.error('Session expired or unauthorized. Please log in again.')
-      authStore.clearAuth && authStore.clearAuth()
-      show.value = false
+    // Usar putData del apiClient que ya incluye el token automáticamente
+    const { putData } = await import('../services/apiClient.js')
+    const userId = user.value.id
+    
+    if (!userId) {
+      notify.error('No se pudo identificar el usuario')
       return
     }
 
-    if (res.ok) {
-      notify.success(data.msg || 'Personal data updated')
+    const res = await putData(`/updateUser/${userId}`, payload)
+
+    if (res && res.success) {
+      notify.success(res.msg || 'Datos personales actualizados')
+      // Actualizar el usuario en el store
+      authStore.setUser({ ...user.value, ...payload })
       show.value = false
     } else {
-      notify.error(data.msg || 'Could not update personal data')
-      console.error('updateUser error', data)
+      notify.error(res?.msg || 'No se pudieron actualizar los datos personales')
     }
   } catch (error) {
-    notify.error('Unexpected error while updating personal data')
-    console.error('handleSave error', error)
+    console.error('Error al actualizar datos:', error)
+    if (error.response?.status === 401) {
+      notify.error('Sesión expirada. Por favor inicia sesión nuevamente.')
+      authStore.clearAuth()
+    } else {
+      notify.error('Error inesperado al actualizar datos personales')
+    }
   }
 }
 

@@ -46,6 +46,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from '../store/authStore.js'
+import { postData } from '../services/apiClient.js'
 
 const showMorph = ref(false)
 const full_name = ref('')
@@ -69,8 +70,17 @@ onMounted(() => {
 })
 
 
-const logout = () => {
+const logout = async () => {
     try {
+        // Intentar cerrar sesión en el backend
+        try {
+            await postData('/logout')
+        } catch (error) {
+            console.warn('Error al cerrar sesión en el servidor:', error)
+            // Continuar con el logout local aunque falle el servidor
+        }
+
+        // Limpiar autenticación local
         authStore.clearAuth()
 
         $q.notify({
