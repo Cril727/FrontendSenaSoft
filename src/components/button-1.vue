@@ -29,7 +29,7 @@ defineProps({
   color: #fff;
   font-weight: bold;
   font-size: 1rem;
-  border-radius: 30px;
+  border-radius: 15px;
   padding: 10px 0;
   box-shadow: 0 2px 8px rgba(4,175,67,0.15);
   transition: background 0.2s;
