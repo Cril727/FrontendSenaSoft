@@ -38,6 +38,25 @@
           emit-value
           map-options
         />
+        <q-input
+          filled
+          dense
+          v-model="form.departureDate"
+          type="date"
+          label="DEPARTURE DATE"
+          class="select"
+          clearable
+        />
+        <q-input
+          filled
+          dense
+          v-model="form.returnDate"
+          type="date"
+          label="RETURN DATE"
+          class="select"
+          :min="form.departureDate"
+          clearable
+        />
         <q-btn
           unelevated
           color="red"
