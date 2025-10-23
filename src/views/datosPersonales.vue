@@ -1,13 +1,13 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md" style="display: flex; justify-content: center; align-items: center; height: 100%;">
       <template >
         ACCOUNT SETUP REQUIRED
       </template>
         <datosForm
           :initial="user"
-          title="Please complete this information, which will help make your experience with CONDORTRAVELS more enjoyable."
+          title="PERSONAL INFORMATION"
+          subtitle="Please complete this information, which will help make your experience with CONDORTRAVELS more enjoyable."
           @save="handleSave"
-          @cancel="closeModal"
         />
   </div>
 </template>

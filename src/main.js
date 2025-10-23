@@ -14,12 +14,16 @@ import {
   QLayout,
   QAvatar,
   QHeader,
+  QBanner,
   QSelect,
   QInput,
   QIcon,
   QBtn,
   QDialog,
   QSpinnerIos,
+  QSpinner,
+  QBadge,
+  QSeparator,
 } from 'quasar'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
@@ -50,12 +54,16 @@ myApp.use(Quasar, {
     QLayout,
     QAvatar,
     QHeader,
+  QBanner,
     QSelect,
     QInput,
     QIcon,
     QBtn,
     QDialog,
     QSpinnerIos,
+    QSpinner,
+    QBadge,
+    QSeparator,
   },
   plugins: { Notify },
 })

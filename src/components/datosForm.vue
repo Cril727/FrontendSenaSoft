@@ -43,7 +43,6 @@
       </div>
 
       <q-card-actions align="right" class="q-pt-lg">
-        <q-btn flat color="negative" label="Cancel" @click="onCancel" />
         <q-btn unelevated color="positive" label="OK" :disable="!isValid" type="submit" />
       </q-card-actions>
     </q-form>
