@@ -124,11 +124,51 @@ const isValid = computed(() => {
 })
 
 function submit () {
-  // Convertir condicien_infante a booleano si es necesario
-  const payload = {
-    ...form.value,
-    condicien_infante: form.value.condicien_infante === true || form.value.condicien_infante === 'true' || form.value.condicien_infante === 1
+  // Whitelist allowed fields to avoid sending backend-only properties (id, timestamps, etc.)
+  const allowed = [
+    'full_name',
+    'type_document',
+    'date_birth',
+    'document',
+    'gender',
+    'phone',
+    'condicien_infante',
+    'email'
+  ]
+
+  const payload = {}
+  for (const key of allowed) {
+    payload[key] = form.value[key]
   }
+
+  // Ensure condicien_infante is boolean
+  payload.condicien_infante = payload.condicien_infante === true || payload.condicien_infante === 'true' || payload.condicien_infante === 1
+
+  // Normalize date formats to YYYY-MM-DD when possible
+  const rawDate = payload.date_birth
+  if (rawDate && typeof rawDate === 'string') {
+    // Accept formats: YYYY/MM/DD, YYYY-MM-DD, DD/MM/YYYY, DD-MM-YYYY
+    const ymd = /^\s*(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})\s*$/
+    const dmy = /^\s*(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})\s*$/
+    let m
+    if ((m = rawDate.match(ymd))) {
+      // YYYY/MM/DD -> YYYY-MM-DD
+      const yy = m[1].padStart(4, '0')
+      const mm = m[2].padStart(2, '0')
+      const dd = m[3].padStart(2, '0')
+      payload.date_birth = `${yy}-${mm}-${dd}`
+    } else if ((m = rawDate.match(dmy))) {
+      // DD/MM/YYYY -> YYYY-MM-DD
+      const dd = m[1].padStart(2, '0')
+      const mm = m[2].padStart(2, '0')
+      const yy = m[3].padStart(4, '0')
+      payload.date_birth = `${yy}-${mm}-${dd}`
+    } else {
+      // leave as is if unknown format
+      payload.date_birth = rawDate
+    }
+  }
+
   emits('save', payload)
 }
 
