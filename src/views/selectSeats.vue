@@ -19,7 +19,7 @@
             </div>
             <div class="info-item">
               <q-icon name="event_seat" size="24px" color="blue" />
-              <span class="info-label">{{ selectedSeats.length }} asiento(s) seleccionado(s)</span>
+              <span class="info-label">{{ selectedSeats.length }}/5 asiento(s) seleccionado(s)</span>
             </div>
           </div>
         </q-card-section>
@@ -36,6 +36,12 @@
         <q-card>
           <q-card-section>
             <div class="text-h6 q-mb-md">Selecciona tus asientos</div>
+            <q-banner v-if="selectedSeats.length >= 5" class="bg-orange-2 text-orange-9 q-mb-md" rounded>
+              <template v-slot:avatar>
+                <q-icon name="info" color="orange" />
+              </template>
+              Has alcanzado el límite máximo de 5 asientos por compra
+            </q-banner>
             
             <!-- Legend -->
             <div class="legend q-mb-lg">
@@ -248,9 +254,16 @@ const toggleSeat = (seat) => {
   const index = selectedSeats.value.findIndex(s => s.id === seat.id)
   
   if (index > -1) {
+    // Deseleccionar asiento
     selectedSeats.value.splice(index, 1)
     notify.info(`Asiento ${seat.code} deseleccionado`)
   } else {
+    // Verificar límite de 5 asientos
+    if (selectedSeats.value.length >= 5) {
+      notify.warning('Solo puedes seleccionar máximo 5 asientos por compra')
+      return
+    }
+    
     selectedSeats.value.push(seat)
     notify.success(`Asiento ${seat.code} seleccionado`)
   }

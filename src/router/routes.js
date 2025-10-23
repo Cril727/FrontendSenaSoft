@@ -8,6 +8,7 @@ import pagar from "../views/pagar.vue";
 import misReservas from "../views/misReservas.vue";
 import crearCuenta from "../views/crearCuenta.vue";
 import selectSeats from "../views/selectSeats.vue";
+import paymentResponse from "../views/paymentResponse.vue";
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: "/crearCuenta",
     component: crearCuenta,
     meta: { requiresGuest: true }
+  },
+  {
+    path: "/payment-response",
+    component: paymentResponse,
+    meta: { requiresAuth: true }
   },
   {
     path: "/app",

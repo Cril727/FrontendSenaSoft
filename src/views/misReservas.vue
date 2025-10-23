@@ -31,11 +31,13 @@
             <q-icon name="flight" /> Información del Vuelo
           </div>
           <div v-if="reservation.flight">
-            <div><strong>Origen:</strong> {{ reservation.flight.origin?.name || 'N/A' }}</div>
-            <div><strong>Destino:</strong> {{ reservation.flight.destination?.name || 'N/A' }}</div>
-            <div><strong>Fecha de salida:</strong> {{ formatDate(reservation.flight.departure_date) }}</div>
-            <div><strong>Hora de salida:</strong> {{ reservation.flight.departure_time }}</div>
-            <div><strong>Duración:</strong> {{ reservation.flight.duration }} horas</div>
+            <div><strong>Origen:</strong> {{ reservation.flight.origin?.city || 'N/A' }}</div>
+            <div><strong>Destino:</strong> {{ reservation.flight.destination?.city || 'N/A' }}</div>
+            <div><strong>Fecha de salida:</strong> {{ formatDate(reservation.flight.departure_at) }}</div>
+            <div v-if="reservation.flight.airplane"><strong>Avión:</strong> {{ reservation.flight.airplane.model }}</div>
+            <div v-if="reservation.flight_seats && reservation.flight_seats.length > 0">
+              <strong>Asiento:</strong> {{ reservation.flight_seats[0].seat?.code || 'N/A' }}
+            </div>
           </div>
         </q-card-section>
 
@@ -48,8 +50,11 @@
           <div v-if="reservation.passenger">
             <div><strong>Nombre:</strong> {{ reservation.passenger.full_name }}</div>
             <div><strong>Documento:</strong> {{ reservation.passenger.document_type }} {{ reservation.passenger.document_number }}</div>
-            <div><strong>Email:</strong> {{ reservation.passenger.email }}</div>
-            <div><strong>Teléfono:</strong> {{ reservation.passenger.phone }}</div>
+          </div>
+          <div v-if="reservation.payer" class="q-mt-sm">
+            <div class="text-caption text-grey-7">Pagador</div>
+            <div><strong>Nombre:</strong> {{ reservation.payer.full_name }}</div>
+            <div><strong>Email:</strong> {{ reservation.payer.email }}</div>
           </div>
         </q-card-section>
 
@@ -67,6 +72,18 @@
             </div>
           </div>
         </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right" v-if="reservation.status === 'confirmed' || reservation.status === 'paid'">
+          <q-btn
+            flat
+            color="green"
+            label="Descargar Tickets"
+            icon="download"
+            @click="downloadTickets(getBaseReferenceCode(reservation.code))"
+          />
+        </q-card-actions>
       </q-card>
     </div>
   </q-page-container>
@@ -89,13 +106,23 @@ const loadReservations = async () => {
     // El token se agrega automáticamente por el interceptor
     const res = await getData('/myReservations')
     
-    if (res && res.data && res.data.reservations) {
-      reservations.value = res.data.reservations
-      console.log('Reservas cargadas:', res.data.reservations)
+    console.log('Respuesta completa:', res)
+    
+    if (res && res.success && res.reservations) {
+      reservations.value = res.reservations
+      console.log('Reservas cargadas:', res.reservations)
+      
+      if (res.reservations.length === 0) {
+        notify.info('No tienes reservas aún')
+      }
+    } else {
+      console.log('Formato de respuesta inesperado:', res)
+      notify.warning('No se encontraron reservas')
     }
   } catch (error) {
     console.error('Error al cargar reservas:', error)
-    notify.error('Error al cargar las reservas')
+    console.error('Detalles del error:', error.response?.data)
+    notify.error('Error al cargar las reservas: ' + (error.response?.data?.message || error.message))
   } finally {
     loading.value = false
   }
@@ -104,6 +131,7 @@ const loadReservations = async () => {
 const getStatusColor = (status) => {
   const colors = {
     'pending': 'orange',
+    'confirmed': 'green',
     'paid': 'green',
     'canceled': 'red'
   }
@@ -113,6 +141,7 @@ const getStatusColor = (status) => {
 const getStatusLabel = (status) => {
   const labels = {
     'pending': 'Pendiente',
+    'confirmed': 'Confirmado',
     'paid': 'Pagado',
     'canceled': 'Cancelado'
   }
@@ -127,6 +156,22 @@ const formatDate = (dateString) => {
     month: 'long',
     day: 'numeric'
   })
+}
+
+// Obtener el código base de referencia (sin el sufijo -1, -2, etc.)
+const getBaseReferenceCode = (code) => {
+  // Si el código tiene formato REF-XXX-1, REF-XXX-2, extraer solo REF-XXX
+  const match = code.match(/^(.+)-\d+$/)
+  return match ? match[1] : code
+}
+
+// Función para descargar tickets
+const downloadTickets = (referenceCode) => {
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+  const downloadUrl = `${apiUrl}/api/tickets/download/${referenceCode}`
+  
+  window.open(downloadUrl, '_blank')
+  notify.success('Descargando tickets...')
 }
 
 onMounted(() => {

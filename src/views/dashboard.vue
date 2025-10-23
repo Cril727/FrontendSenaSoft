@@ -1,8 +1,13 @@
 <template>
-  <q-page-container class="page-bg" style="padding: 4%;">
+  <q-page-container class="page-bg" style="padding: 4%">
     <div class="hero">
       <div class="promo">
-        <img src="../assets/promotion.png" alt="promo" class="promo-img" style="width: 2000px; height: 100%;"/>
+        <img
+          src="../assets/promotion.png"
+          alt="promo"
+          class="promo-img"
+          style="width: 2000px; height: 100%"
+        />
       </div>
     </div>
 
@@ -61,21 +66,24 @@
       </div>
 
       <!-- No results -->
-      <div v-else-if="searchPerformed && flights.length === 0" class="text-center q-pa-lg">
+      <div
+        v-else-if="searchPerformed && flights.length === 0"
+        class="text-center q-pa-lg"
+      >
         <q-icon name="flight_takeoff" size="4em" color="grey-5" />
-        <div class="text-h6 q-mt-md text-grey-7">No se encontraron vuelos para esta ruta</div>
+        <div class="text-h6 q-mt-md text-grey-7">
+          No se encontraron vuelos para esta ruta
+        </div>
         <div class="text-body2 text-grey-6">Intenta con otras ciudades</div>
       </div>
 
       <!-- Results -->
       <div v-else-if="flights.length > 0" class="flights-grid">
-        <q-card
-          v-for="flight in flights"
-          :key="flight.id"
-          class="flight-card"
-        >
+        <q-card v-for="flight in flights" :key="flight.id" class="flight-card">
           <q-card-section class="bg-red text-white">
-            <div class="text-h6">{{ flight.origin?.city }} → {{ flight.destination?.city }}</div>
+            <div class="text-h6">
+              {{ flight.origin?.city }} → {{ flight.destination?.city }}
+            </div>
           </q-card-section>
 
           <q-card-section>
@@ -83,26 +91,29 @@
               <div class="info-row">
                 <q-icon name="schedule" color="grey-7" size="20px" />
                 <span class="info-label">Salida:</span>
-                <span class="info-value">{{ formatDate(flight.departure_at) }}</span>
+                <span class="info-value">{{
+                  formatDate(flight.departure_at)
+                }}</span>
               </div>
               <div class="info-row">
                 <q-icon name="flight" color="grey-7" size="20px" />
                 <span class="info-label">Avión:</span>
-                <span class="info-value">{{ flight.airplane?.model || 'N/A' }}</span>
+                <span class="info-value">{{
+                  flight.airplane?.model || "N/A"
+                }}</span>
               </div>
               <div class="info-row">
                 <q-icon name="attach_money" color="green" size="20px" />
                 <span class="info-label">Precio:</span>
-                <span class="info-value price">${{ formatPrice(flight.price) }}</span>
+                <span class="info-value price"
+                  >${{ formatPrice(flight.price) }}</span
+                >
               </div>
             </div>
           </q-card-section>
 
           <q-card-actions align="right">
-            <Button1
-              label="Reservar"
-              @click="reserveFlight(flight)"
-            />
+            <Button1 label="Reservar" @click="reserveFlight(flight)" />
           </q-card-actions>
         </q-card>
       </div>
@@ -111,138 +122,129 @@
       <div v-else class="text-center q-pa-lg">
         <q-icon name="search" size="4em" color="grey-5" />
         <div class="text-h6 q-mt-md text-grey-7">Busca tu vuelo ideal</div>
-        <div class="text-body2 text-grey-6">Selecciona origen y destino para comenzar</div>
+        <div class="text-body2 text-grey-6">
+          Selecciona origen y destino para comenzar
+        </div>
       </div>
     </div>
   </q-page-container>
 </template>
 
 <script setup>
-import { getData, postData } from '../services/apiClient.js'
-import { ref, onMounted } from 'vue'
-import { useNotifications } from '../composables/useNotifications.js'
-import { useRouter } from 'vue-router'
-import Button1 from '../components/button-1.vue'
+import { getData, postData } from "../services/apiClient.js";
+import { ref, onMounted } from "vue";
+import { useNotifications } from "../composables/useNotifications.js";
+import { useRouter } from "vue-router";
+import Button1 from "../components/button-1.vue";
 
-const notify = useNotifications()
-const router = useRouter()
+const notify = useNotifications();
+const router = useRouter();
 
-const originOptions = ref([])
-const destinationOptions = ref([])
-const passengerOptions = [1,2,3,4,5].map(n => ({ label: String(n), value: n }))
+const originOptions = ref([]);
+const destinationOptions = ref([]);
+const passengerOptions = [1, 2, 3, 4, 5].map((n) => ({
+  label: String(n),
+  value: n,
+}));
 
 const form = ref({
   origin: null,
   destination: null,
-  passengers: 1
-})
+  passengers: 1,
+});
 
-const flights = ref([])
-const searching = ref(false)
-const searchPerformed = ref(false)
+const flights = ref([]);
+const searching = ref(false);
+const searchPerformed = ref(false);
 
-// Cargar ciudades de origen
 const loadOrigins = async () => {
   try {
-    const res = await getData('/origins')
+    const res = await getData("/origins");
     if (res.success && res.city) {
-      originOptions.value = res.city
+      originOptions.value = res.city;
     }
   } catch (error) {
-    console.error('Error al cargar orígenes:', error)
-    notify.error('Error al cargar ciudades de origen')
+    console.error("Error al cargar orígenes:", error);
+    notify.error("Error al cargar ciudades de origen");
   }
-}
+};
 
-// Cargar ciudades de destino
 const loadDestinations = async () => {
   try {
-    const res = await getData('/destinations')
+    const res = await getData("/destinations");
     if (res.success && res.city) {
-      destinationOptions.value = res.city
+      destinationOptions.value = res.city;
     }
   } catch (error) {
-    console.error('Error al cargar destinos:', error)
-    notify.error('Error al cargar ciudades de destino')
+    console.error("Error al cargar destinos:", error);
+    notify.error("Error al cargar ciudades de destino");
   }
-}
+};
 
-// Buscar vuelos
 const searchFlights = async () => {
   if (!form.value.origin || !form.value.destination) {
-    notify.error('Por favor selecciona origen y destino')
-    return
+    notify.error("Por favor selecciona origen y destino");
+    return;
   }
 
   if (form.value.origin === form.value.destination) {
-    notify.error('El origen y destino deben ser diferentes')
-    return
+    notify.error("El origen y destino deben ser diferentes");
+    return;
   }
-
-  searching.value = true
-  searchPerformed.value = true
+  searching.value = true;
+  searchPerformed.value = true;
 
   try {
-    const res = await postData('/searchFlights', {
+    const res = await postData("/searchFlights", {
       origin_id: form.value.origin,
-      destination_id: form.value.destination
-    })
+      destination_id: form.value.destination,
+    });
 
     if (res.success) {
-      flights.value = res.flights
-      if (res.flights.length === 0) {
-        notify.info('No se encontraron vuelos para esta ruta')
-      } else {
-        notify.success(`Se encontraron ${res.flights.length} vuelo(s)`)
-      }
+      flights.value = res.flights;
     }
   } catch (error) {
-    console.error('Error al buscar vuelos:', error)
-    notify.error('Error al buscar vuelos')
-    flights.value = []
+    console.error("Error al buscar vuelos:", error);
+    notify.error("Error al buscar vuelos");
+    flights.value = [];
   } finally {
-    searching.value = false
+    searching.value = false;
   }
-}
+};
 
-// Formatear fecha
 const formatDate = (dateString) => {
-  if (!dateString) return 'N/A'
-  const date = new Date(dateString)
-  return date.toLocaleString('es-CO', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-}
+  if (!dateString) return "N/A";
+  const date = new Date(dateString);
+  return date.toLocaleString("es-CO", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
-// Formatear precio
 const formatPrice = (price) => {
-  return new Intl.NumberFormat('es-CO').format(price)
-}
+  return new Intl.NumberFormat("es-CO").format(price);
+};
 
-// Reservar vuelo
 const reserveFlight = (flight) => {
-  // Redirigir a la página de selección de asientos
   router.push({
-    name: 'selectSeats',
+    name: "selectSeats",
     params: { flightId: flight.id },
     query: {
       origin: flight.origin?.city,
       destination: flight.destination?.city,
       price: flight.price,
-      departure: flight.departure_at
-    }
-  })
-}
+      departure: flight.departure_at,
+    },
+  });
+};
 
 onMounted(() => {
-  loadOrigins()
-  loadDestinations()
-})
-
+  loadOrigins();
+  loadDestinations();
+});
 </script>
 
 <style scoped>
@@ -250,7 +252,7 @@ onMounted(() => {
   background: #e9e9e9;
   min-height: 100vh;
   padding-bottom: 40px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 /* header */
@@ -309,7 +311,7 @@ onMounted(() => {
   width: 90%;
   max-width: 1000px;
   border-radius: 8px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
   object-fit: cover;
 }
 
@@ -320,7 +322,7 @@ onMounted(() => {
   background: #d6d6d6;
   padding: 18px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -352,7 +354,9 @@ onMounted(() => {
   border-radius: 8px;
   height: 42px;
 }
-.search-btn:hover { filter: brightness(0.95); }
+.search-btn:hover {
+  filter: brightness(0.95);
+}
 
 /* content area */
 .page-content {
@@ -410,9 +414,17 @@ onMounted(() => {
 
 /* responsive */
 @media (max-width: 900px) {
-  .search-row { flex-direction: column; align-items: stretch; }
-  .small-select, .search-btn { width: 100%; }
-  .promo-img { width: 100%; }
+  .search-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .small-select,
+  .search-btn {
+    width: 100%;
+  }
+  .promo-img {
+    width: 100%;
+  }
   .flights-grid {
     grid-template-columns: 1fr;
   }
