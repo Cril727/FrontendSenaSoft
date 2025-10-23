@@ -11,7 +11,7 @@
           <q-input filled v-model="form.full_name" label="Full name" :rules="[required]" />
         </div>
         <div class="col-6">
-          <q-select filled v-model="form.type_document" :options="documentTypes" label="Document type" :rules="[required]" />
+          <q-select filled v-model="form.type_document" :options="documentTypes" label="Document type" :rules="[required]" emit-value map-options />
         </div>
       </div>
 
@@ -26,7 +26,7 @@
 
       <div class="row">
         <div class="col-6">
-          <q-select filled v-model="form.gender" :options="genderOptions" label="Gender" :rules="[required]" />
+          <q-select filled v-model="form.gender" :options="genderOptions" label="Gender" :rules="[required]" emit-value map-options />
         </div>
         <div class="col-6">
           <q-input filled v-model="form.phone" label="Phone" />
@@ -35,7 +35,7 @@
 
       <div class="row">
         <div class="col-6">
-          <q-select filled v-model="form.condicien_infante" :options="infantOptions" label="Infant condition" />
+          <q-select filled v-model="form.condicien_infante" :options="infantOptions" label="Infant condition" emit-value map-options />
         </div>
         <div class="col-6">
           <q-input filled v-model="form.email" label="Email" :rules="[required, emailRule]" />
@@ -125,7 +125,12 @@ const isValid = computed(() => {
 })
 
 function submit () {
-  emits('save', { ...form.value })
+  // Convertir condicien_infante a booleano si es necesario
+  const payload = {
+    ...form.value,
+    condicien_infante: form.value.condicien_infante === true || form.value.condicien_infante === 'true' || form.value.condicien_infante === 1
+  }
+  emits('save', payload)
 }
 
 function onCancel () {

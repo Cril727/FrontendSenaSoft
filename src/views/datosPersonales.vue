@@ -32,24 +32,51 @@ try {
 
 const handleSave = async (payload) => {
   try {
-    // Usar putData del apiClient que ya incluye el token automáticamente
-    const { putData } = await import('../services/apiClient.js')
-    const userId = user.value.id
+    // Usar putData y getData del apiClient que ya incluye el token automáticamente
+    const { putData, getData } = await import('../services/apiClient.js')
     
-    if (!userId) {
-      notify.error('No se pudo identificar el usuario')
+    // Obtener información del usuario autenticado usando /me
+    const meRes = await getData('/me')
+        
+    if (!meRes || !meRes.data || !meRes.data.user) {
+      notify.error('No se pudo obtener la información del usuario')
       return
     }
 
-    const res = await putData(`/updatePassenger/${userId}`, payload)
+    const currentUser = meRes.data.user
+    const userEmail = currentUser.email
+    
+    if (!userEmail) {
+      notify.error('No se pudo identificar el email del usuario')
+      return
+    }
 
-    if (res && res.success) {
-      notify.success(res.msg || 'Datos personales actualizados')
+    // Buscar el pasajero por email
+    const passengersRes = await getData('/passengers')
+    
+    if (!passengersRes || !passengersRes.data || !passengersRes.data.passengers) {
+      notify.error('No se pudo obtener la información del pasajero')
+      return
+    }
+
+    const passenger = passengersRes.data.passengers.find(p => p.email === userEmail)
+    
+    if (!passenger) {
+      notify.error('No se encontró el pasajero asociado a tu cuenta')
+      return
+    }
+
+    // Actualizar el pasajero
+    const res = await putData(`/updatePassenger/${passenger.id}`, payload)
+
+    if (res && res.data && res.data.success) {
+      notify.success(res.data.message || 'Datos personales actualizados')
       // Actualizar el usuario en el store
-      authStore.setUser({ ...user.value, ...payload })
+      authStore.setUser({ ...currentUser, ...payload })
+      user.value = { ...currentUser, ...payload }
       show.value = false
     } else {
-      notify.error(res?.msg || 'No se pudieron actualizar los datos personales')
+      notify.error(res?.data?.message || 'No se pudieron actualizar los datos personales')
     }
   } catch (error) {
     console.error('Error al actualizar datos:', error)
@@ -57,7 +84,7 @@ const handleSave = async (payload) => {
       notify.error('Sesión expirada. Por favor inicia sesión nuevamente.')
       authStore.clearAuth()
     } else {
-      notify.error('Error inesperado al actualizar datos personales')
+      notify.error(error.response?.data?.message || 'Error inesperado al actualizar datos personales')
     }
   }
 }

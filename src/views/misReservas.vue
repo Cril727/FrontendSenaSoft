@@ -13,10 +13,59 @@
     </div>
 
     <div v-else class="q-gutter-md">
-      <q-card v-for="reservation in reservations" :key="reservation.id" class="q-pa-md">
+      <q-card v-for="reservation in reservations" :key="reservation.id" class="reservation-card">
         <q-card-section>
-          <div class="text-h6">Reserva #{{ reservation.id }}</div>
-          <div class="text-subtitle2">{{ reservation.flight_info }}</div>
+          <div class="row items-center justify-between">
+            <div>
+              <div class="text-h6">Código: {{ reservation.code }}</div>
+              <q-badge :color="getStatusColor(reservation.status)" :label="getStatusLabel(reservation.status)" />
+            </div>
+            <div class="text-h5 text-primary">${{ reservation.worth }}</div>
+          </div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section>
+          <div class="text-subtitle1 text-weight-bold q-mb-sm">
+            <q-icon name="flight" /> Información del Vuelo
+          </div>
+          <div v-if="reservation.flight">
+            <div><strong>Origen:</strong> {{ reservation.flight.origin?.name || 'N/A' }}</div>
+            <div><strong>Destino:</strong> {{ reservation.flight.destination?.name || 'N/A' }}</div>
+            <div><strong>Fecha de salida:</strong> {{ formatDate(reservation.flight.departure_date) }}</div>
+            <div><strong>Hora de salida:</strong> {{ reservation.flight.departure_time }}</div>
+            <div><strong>Duración:</strong> {{ reservation.flight.duration }} horas</div>
+          </div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section>
+          <div class="text-subtitle1 text-weight-bold q-mb-sm">
+            <q-icon name="person" /> Información del Pasajero
+          </div>
+          <div v-if="reservation.passenger">
+            <div><strong>Nombre:</strong> {{ reservation.passenger.full_name }}</div>
+            <div><strong>Documento:</strong> {{ reservation.passenger.document_type }} {{ reservation.passenger.document_number }}</div>
+            <div><strong>Email:</strong> {{ reservation.passenger.email }}</div>
+            <div><strong>Teléfono:</strong> {{ reservation.passenger.phone }}</div>
+          </div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section>
+          <div class="row items-center justify-between">
+            <div>
+              <div class="text-subtitle2 text-grey-7">Número de asientos</div>
+              <div class="text-h6">{{ reservation.number_of_positions }}</div>
+            </div>
+            <div>
+              <div class="text-subtitle2 text-grey-7">Fecha de reserva</div>
+              <div>{{ formatDate(reservation.created_at) }}</div>
+            </div>
+          </div>
         </q-card-section>
       </q-card>
     </div>
@@ -40,9 +89,9 @@ const loadReservations = async () => {
     // El token se agrega automáticamente por el interceptor
     const res = await getData('/myReservations')
     
-    if (res && res.data) {
-      reservations.value = res.data
-      console.log('Reservas cargadas:', res.data)
+    if (res && res.data && res.data.reservations) {
+      reservations.value = res.data.reservations
+      console.log('Reservas cargadas:', res.data.reservations)
     }
   } catch (error) {
     console.error('Error al cargar reservas:', error)
@@ -50,6 +99,34 @@ const loadReservations = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const getStatusColor = (status) => {
+  const colors = {
+    'pending': 'orange',
+    'paid': 'green',
+    'canceled': 'red'
+  }
+  return colors[status] || 'grey'
+}
+
+const getStatusLabel = (status) => {
+  const labels = {
+    'pending': 'Pendiente',
+    'paid': 'Pagado',
+    'canceled': 'Cancelado'
+  }
+  return labels[status] || status
+}
+
+const formatDate = (dateString) => {
+  if (!dateString) return 'N/A'
+  const date = new Date(dateString)
+  return date.toLocaleDateString('es-CO', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
 }
 
 onMounted(() => {
@@ -61,6 +138,16 @@ onMounted(() => {
 .q-page-container {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.reservation-card {
+  border-left: 4px solid var(--q-primary);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.reservation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 </style>
 
