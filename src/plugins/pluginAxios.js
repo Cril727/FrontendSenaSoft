@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const apiClient = axios.create({
-    baseURL: 'https://retosenasoft-8200.onrender.com//api',
+    baseURL: 'https://retosenasoft-8200.onrender.com/api',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
