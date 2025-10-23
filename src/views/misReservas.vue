@@ -158,7 +158,7 @@ const formatDate = (dateString) => {
   })
 }
 
-// Obtener el código base de referencia (sin el sufijo -1, -2, etc.)
+// Obtener el código base de referencia 
 const getBaseReferenceCode = (code) => {
   // Si el código tiene formato REF-XXX-1, REF-XXX-2, extraer solo REF-XXX
   const match = code.match(/^(.+)-\d+$/)
