@@ -38,14 +38,6 @@
           emit-value
           map-options
         />
-        <q-select
-          filled
-          dense
-          v-model="form.passengers"
-          :options="passengerOptions"
-          label="NUMBER OF PASSENGERS"
-          class="small-select"
-        />
         <q-btn
           unelevated
           color="red"
@@ -89,10 +81,17 @@
           <q-card-section>
             <div class="flight-info">
               <div class="info-row">
-                <q-icon name="schedule" color="grey-7" size="20px" />
+                <q-icon name="flight_takeoff" color="grey-7" size="20px" />
                 <span class="info-label">Salida:</span>
                 <span class="info-value">{{
                   formatDate(flight.departure_at)
+                }}</span>
+              </div>
+              <div class="info-row" v-if="flight.return_at">
+                <q-icon name="flight_land" color="grey-7" size="20px" />
+                <span class="info-label">Regreso:</span>
+                <span class="info-value">{{
+                  formatDate(flight.return_at)
                 }}</span>
               </div>
               <div class="info-row">
@@ -150,6 +149,8 @@ const passengerOptions = [1, 2, 3, 4, 5].map((n) => ({
 const form = ref({
   origin: null,
   destination: null,
+  departureDate: null,
+  returnDate: null,
   passengers: 1,
 });
 
@@ -191,14 +192,36 @@ const searchFlights = async () => {
     notify.error("El origen y destino deben ser diferentes");
     return;
   }
+
+  if (form.value.returnDate && !form.value.departureDate) {
+    notify.error("Por favor selecciona una fecha de ida");
+    return;
+  }
+
+  if (form.value.returnDate && form.value.departureDate &&
+      form.value.returnDate < form.value.departureDate) {
+    notify.error("La fecha de vuelta debe ser posterior a la fecha de ida");
+    return;
+  }
+
   searching.value = true;
   searchPerformed.value = true;
 
   try {
-    const res = await postData("/searchFlights", {
+    const searchData = {
       origin_id: form.value.origin,
       destination_id: form.value.destination,
-    });
+    };
+
+    // Add dates if provided
+    if (form.value.departureDate) {
+      searchData.departure_date = form.value.departureDate;
+    }
+    if (form.value.returnDate) {
+      searchData.return_date = form.value.returnDate;
+    }
+
+    const res = await postData("/searchFlights", searchData);
 
     if (res.success) {
       flights.value = res.flights;

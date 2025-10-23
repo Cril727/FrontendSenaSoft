@@ -76,13 +76,6 @@
         <q-separator />
 
         <q-card-actions align="right" v-if="reservation.status === 'confirmed' || reservation.status === 'paid'">
-          <q-btn
-            flat
-            color="green"
-            label="Descargar Tickets"
-            icon="download"
-            @click="downloadTickets(getBaseReferenceCode(reservation.code))"
-          />
         </q-card-actions>
       </q-card>
     </div>

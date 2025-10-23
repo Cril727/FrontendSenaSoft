@@ -107,6 +107,7 @@
                         :rules="[val => !!val || 'Campo requerido']"
                       />
                     </div>
+                    
                   </div>
 
                   <q-separator v-if="index < passengersData.length - 1" class="q-my-md" />
@@ -218,8 +219,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { postData } from '../services/apiClient.js'
+import { postData, getData } from '../services/apiClient.js'
 import { useNotifications } from '../composables/useNotifications.js'
+import { useAuthStore } from '../store/authStore.js'
 
 const router = useRouter()
 const notify = useNotifications()
